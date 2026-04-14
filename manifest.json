@@ -1,0 +1,35 @@
+{
+  "name": "Mancala — Strategy Board Game",
+  "short_name": "Mancala",
+  "description": "Play Mancala with smart move suggestions. Track opponent moves and get AI-powered strategy tips.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#1a1510",
+  "theme_color": "#1a1510",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/icon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["games", "entertainment"],
+  "lang": "en"
+}
