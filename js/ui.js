@@ -47,10 +47,12 @@ function renderPits() {
     playerPitsInner.appendChild(pit);
   }
 
-  // Opponent pits: rendered right-to-left visually (12 → 7), so that:
-  //   - Pit 12 appears leftmost = opponent's pit 1 (their left = our right-to-left view)
-  //   - Pit 7 appears rightmost = opponent's pit 6 (nearest OPP STORE on the left)
-  // This way opponent pit numbers match what they see from their side of the board.
+  // Opponent pits: rendered 12 → 7 left-to-right visually, so that:
+  //   - Pit 12 appears leftmost (above player pit #6, rightmost) = opponent's pit #6
+  //   - Pit 7 appears rightmost (above player pit #1, leftmost) = opponent's pit #1
+  // Standard Mancala: player pit #1 is opposite opponent pit #6, and vice versa.
+  // From the player's view, opponent pit numbers increase left→right (6 down to 1),
+  // mirroring the fact that both players count from their OWN left.
   opponentPitsInner.innerHTML = '';
   for (let i = 12; i >= 7; i--) {
     const pit = createPitElement(i, game.board[i], 'opponent');
@@ -64,7 +66,7 @@ function createPitElement(index, count, side) {
   const pit = document.createElement('div');
   const isPlayer = side === 'player';
   const isSuggested = isPlayer && index === suggestedPitIndex && game.turn === 'player';
-  const isClickable = isPlayer && game.turn === 'player' && !game.gameOver && !animating;
+  const isClickable = (isPlayer ? game.turn === 'player' : game.turn === 'opponent') && !game.gameOver && !animating;
   const isEmpty = count === 0;
 
   pit.className = [
@@ -79,12 +81,13 @@ function createPitElement(index, count, side) {
   pit.setAttribute('data-testid', `pit-${index}`);
   pit.setAttribute('role', 'button');
   pit.setAttribute('tabindex', isClickable && !isEmpty ? '0' : '-1');
-  pit.setAttribute('aria-label', `${side === 'player' ? 'Your' : 'Opponent'} pit ${isPlayer ? index + 1 : 13 - index}: ${count} stone${count !== 1 ? 's' : ''}`);
+  pit.setAttribute('aria-label', `${side === 'player' ? 'Your' : 'Opponent'} pit ${isPlayer ? index + 1 : index - 6}: ${count} stone${count !== 1 ? 's' : ''}`);
 
-  // Pit number label (1-based, from each side's perspective)
-  // Opponent store is on the LEFT. Opponent pits are rendered 12→7 left-to-right.
-  // Pit 12 = their pit 1, pit 11 = their pit 2, ..., pit 7 = their pit 6
-  const pitNum = isPlayer ? index + 1 : 13 - index; // opponent: 12→1, 11→2, ..., 7→6
+  // Pit number label (1-based, positional — player's pit #N is directly opposite opponent's pit #N)
+  // Opponent pits rendered 12→7 left-to-right (above player pits 5→0).
+  // Pit 12 is above player pit #6 → opponent pit #6. Pit 7 is above player pit #1 → opponent pit #1.
+  // Formula: index - 6  (7→1, 8→2, ..., 12→6)
+  const pitNum = isPlayer ? index + 1 : index - 6; // opponent: 7→1, 8→2, ..., 12→6
   const label = document.createElement('span');
   label.className = 'pit-number';
   label.textContent = pitNum;
@@ -116,11 +119,14 @@ function createPitElement(index, count, side) {
   pit.appendChild(stonesWrap);
 
   if (isClickable && !isEmpty) {
-    pit.addEventListener('click', () => handlePlayerMove(index));
+    const handler = isPlayer
+      ? () => handlePlayerMove(index)
+      : () => handleOpponentMove(index);
+    pit.addEventListener('click', handler);
     pit.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        handlePlayerMove(index);
+        handler();
       }
     });
   }
@@ -158,6 +164,7 @@ function renderTurnUI() {
   if (game.gameOver) {
     turnLabel.textContent = 'Game Over';
     turnIndicator.className = 'turn-indicator turn-indicator--neutral';
+    opponentInputSection.classList.add('hidden');
     return;
   }
   if (game.turn === 'player') {
@@ -165,9 +172,9 @@ function renderTurnUI() {
     turnIndicator.className = 'turn-indicator turn-indicator--player';
     opponentInputSection.classList.add('hidden');
   } else {
-    turnLabel.textContent = "Opponent's Turn — Enter their move below";
+    turnLabel.textContent = "Opponent's Turn — click their pit on the board";
     turnIndicator.className = 'turn-indicator turn-indicator--opponent';
-    opponentInputSection.classList.remove('hidden');
+    opponentInputSection.classList.add('hidden');
   }
 }
 
@@ -176,7 +183,7 @@ function renderSuggestion() {
     suggestionPanel.classList.add('suggestion--muted');
     suggestionPit.textContent = '—';
     suggestionReason.textContent = game.turn !== 'player'
-      ? 'Waiting for opponent to move...'
+      ? 'Click the opponent\'s pit on the board above.'
       : 'Game over.';
     return;
   }
@@ -195,29 +202,8 @@ function renderSuggestion() {
 }
 
 function renderOpponentMoveButtons() {
-  opponentMoveButtons.innerHTML = '';
-  if (game.turn !== 'opponent' || game.gameOver) return;
-
-  // Opponent pits rendered as buttons 1–6 from their perspective.
-  // Pit 12 = their pit 1, pit 11 = their pit 2, ..., pit 7 = their pit 6
-  for (let i = 12; i >= 7; i--) {
-    const opponentPitNumber = 13 - i; // 12→1, 11→2, ..., 7→6
-    const count = game.board[i];
-    const btn = document.createElement('button');
-    btn.className = 'opp-move-btn' + (count === 0 ? ' opp-move-btn--empty' : '');
-    btn.setAttribute('data-testid', `opp-move-btn-${opponentPitNumber}`);
-    btn.disabled = count === 0;
-    btn.innerHTML = `
-      <span class="opp-btn-label">Pit</span>
-      <span class="opp-btn-num">${opponentPitNumber}</span>
-      <span class="opp-btn-stones">${count} <span class="opp-btn-stones-word">${count === 1 ? 'stone' : 'stones'}</span></span>
-    `;
-    btn.setAttribute('aria-label', `Opponent pit ${opponentPitNumber}: ${count} stones`);
-    if (count > 0) {
-      btn.addEventListener('click', () => handleOpponentMove(i));
-    }
-    opponentMoveButtons.appendChild(btn);
-  }
+  // Opponent input is now handled directly via clicking pits on the board.
+  // This function is kept as a no-op for compatibility.
 }
 
 // --- Game Logic Handlers ---
@@ -256,10 +242,9 @@ function handleOpponentMove(pitIndex) {
   }
 
   animating = true;
-  opponentMoveNote.textContent = '';
 
   const result = game.makeMove(pitIndex);
-  const opponentPitNumber = pitIndex - 6;
+  const opponentPitNumber = pitIndex - 6; // 7→1, ..., 12→6
 
   renderBoard();
 

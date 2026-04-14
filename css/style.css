@@ -466,6 +466,16 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 800; line-height: 1.
 }
 .pit--clickable:active { transform: scale(0.97); }
 
+/* Opponent clickable pits get a blue tint instead of gold */
+.pit--opponent.pit--clickable {
+  border-color: rgba(90, 157, 224, 0.3);
+}
+.pit--opponent.pit--clickable:hover {
+  background: var(--color-pit-hover);
+  border-color: var(--color-stone-opponent);
+  box-shadow: 0 4px 20px rgba(90, 157, 224, 0.25);
+}
+
 .pit--suggested {
   border-color: var(--color-player) !important;
   box-shadow: 0 0 0 3px var(--color-player-glow), 0 4px 20px rgba(0,0,0,0.4);

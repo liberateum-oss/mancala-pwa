@@ -126,13 +126,9 @@
       </div>
     </section>
 
-    <!-- Opponent move input -->
-    <section class="opponent-input-section" id="opponentInputSection">
-      <h3 class="input-title">Enter Opponent's Move</h3>
-      <p class="input-hint">Select which pit the opponent picked from (labeled 1–6 from their left):</p>
-      <div class="opponent-move-buttons" id="opponentMoveButtons">
-        <!-- Rendered by JS -->
-      </div>
+    <!-- Opponent move input (hidden — opponent pits are now clickable directly on the board) -->
+    <section class="opponent-input-section hidden" id="opponentInputSection">
+      <div class="opponent-move-buttons" id="opponentMoveButtons"></div>
       <p class="input-note" id="opponentMoveNote"></p>
     </section>
 
@@ -183,10 +179,10 @@
           <strong>Game Over:</strong> When all pits on one side are empty, the player with stones remaining collects them all into their store. Most stones in the store wins.
         </div>
         <div class="help-rule">
-          <strong>Opponent Moves:</strong> This app is a two-player tracker. When your opponent makes a move in the physical game, enter their pit number so the app stays in sync and can give you suggestions.
+          <strong>Opponent Moves:</strong> This app is a two-player tracker. When your opponent makes a move in the physical game, click their pit directly on the board to keep the app in sync and get suggestions.
         </div>
         <div class="help-rule">
-          <strong>Pit Numbering:</strong> Your pits are numbered 1–6 left to right. The opponent's pits are numbered 1–6 from their perspective (left to right for them, right to left as seen from your side).
+          <strong>Pit Numbering:</strong> Your pits are numbered 1–6 left to right. Opponent pit #1 sits directly opposite your pit #1, so corresponding pits share a number across the board.
         </div>
       </div>
     </div>
