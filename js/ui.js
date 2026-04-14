@@ -90,11 +90,16 @@ function createPitElement(index, count, side) {
   label.textContent = pitNum;
   pit.appendChild(label);
 
-  // Stone count
+  // Stone count + label
   const countEl = document.createElement('span');
   countEl.className = 'pit-count';
   countEl.textContent = count;
   pit.appendChild(countEl);
+
+  const countLabelEl = document.createElement('span');
+  countLabelEl.className = 'pit-count-label';
+  countLabelEl.textContent = count === 1 ? 'stone' : 'stones';
+  pit.appendChild(countLabelEl);
 
   // Stone visual
   const stonesWrap = document.createElement('div');
@@ -202,7 +207,11 @@ function renderOpponentMoveButtons() {
     btn.className = 'opp-move-btn' + (count === 0 ? ' opp-move-btn--empty' : '');
     btn.setAttribute('data-testid', `opp-move-btn-${opponentPitNumber}`);
     btn.disabled = count === 0;
-    btn.innerHTML = `<span class="opp-btn-num">${opponentPitNumber}</span><span class="opp-btn-count">${count}</span>`;
+    btn.innerHTML = `
+      <span class="opp-btn-label">Pit</span>
+      <span class="opp-btn-num">${opponentPitNumber}</span>
+      <span class="opp-btn-stones">${count} <span class="opp-btn-stones-word">${count === 1 ? 'stone' : 'stones'}</span></span>
+    `;
     btn.setAttribute('aria-label', `Opponent pit ${opponentPitNumber}: ${count} stones`);
     if (count > 0) {
       btn.addEventListener('click', () => handleOpponentMove(i));

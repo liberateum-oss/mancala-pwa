@@ -481,15 +481,26 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 800; line-height: 1.
 
 .pit-number {
   position: absolute;
-  top: 4px;
+  top: 5px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 9px;
   font-weight: 700;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.9);
   letter-spacing: 0.03em;
   pointer-events: none;
   z-index: 3;
+  background: rgba(0,0,0,0.35);
+  border-radius: var(--radius-full);
+  padding: 1px 5px;
+  line-height: 1.4;
+}
+
+.pit-number::before {
+  content: '#';
+  opacity: 0.55;
+  font-size: 7px;
+  margin-right: 1px;
 }
 
 .pit-count {
@@ -500,6 +511,19 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 800; line-height: 1.
   z-index: 2;
   pointer-events: none;
   text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  line-height: 1;
+}
+
+.pit-count-label {
+  font-size: 8px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  z-index: 2;
+  line-height: 1;
+  margin-top: 1px;
 }
 
 .pit--player .pit-count { color: var(--color-stone-player); }
@@ -613,15 +637,16 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 800; line-height: 1.
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-1);
-  width: 64px;
-  height: 72px;
+  gap: 2px;
+  width: 72px;
+  height: 80px;
   background: var(--color-surface-offset);
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-lg);
   color: var(--color-opponent);
   transition: all var(--transition-fast);
   cursor: pointer;
+  padding: var(--space-2);
 }
 
 .opp-move-btn:hover:not(:disabled) {
@@ -638,15 +663,41 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 800; line-height: 1.
   cursor: not-allowed;
 }
 
+/* "Pit" micro-label */
+.opp-btn-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-faint);
+  line-height: 1;
+}
+
+/* Big pit number */
 .opp-btn-num {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: var(--text-sm);
+  font-size: var(--text-lg);
+  color: var(--color-opponent);
+  line-height: 1;
 }
 
-.opp-btn-count {
-  font-size: var(--text-xs);
+/* Stone count */
+.opp-btn-stones {
+  font-size: 10px;
+  font-weight: 600;
   color: var(--color-text-muted);
+  line-height: 1;
+  margin-top: 2px;
+  border-top: 1px solid var(--color-divider);
+  padding-top: 3px;
+  width: 100%;
+  text-align: center;
+}
+
+.opp-btn-stones-word {
+  font-weight: 400;
+  opacity: 0.7;
 }
 
 .input-note {
