@@ -382,8 +382,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 800; line-height: 1.
   z-index: 1;
 }
 
-.store-col--player .store { border-color: rgba(240, 176, 32, 0.2); }
+.store-col--player .store { border-color: rgba(240, 176, 32, 0.25); }
 .store-col--player .store-count { color: var(--color-stone-player); }
+.store-col--opponent .store { border-color: rgba(90, 157, 224, 0.2); }
 .store-col--opponent .store-count { color: var(--color-stone-opponent); }
 
 .stone-pile {

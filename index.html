@@ -71,22 +71,22 @@
     <section class="board-section">
       <div class="board" id="board" role="region" aria-label="Mancala board">
 
-        <!-- Player store (left side, player collects here) -->
-        <div class="store-col store-col--player">
-          <div class="store" id="store-player" data-testid="store-player">
-            <span class="store-label">Your Store</span>
-            <span class="store-count" id="store-player-count">0</span>
-            <div class="stone-pile" id="store-player-pile"></div>
+        <!-- Opponent store (left side) -->
+        <div class="store-col store-col--opponent">
+          <div class="store" id="store-opponent" data-testid="store-opponent">
+            <span class="store-label">Opp Store</span>
+            <span class="store-count" id="store-opponent-count">0</span>
+            <div class="stone-pile" id="store-opponent-pile"></div>
           </div>
         </div>
 
         <!-- Pits grid -->
         <div class="pits-section">
-          <!-- Opponent pits (top row, displayed right-to-left: pits 12–7) -->
+          <!-- Opponent pits (top row, displayed left-to-right from opponent's perspective: pits 7–12) -->
           <div class="pits-row pits-row--opponent" role="row" aria-label="Opponent pits">
             <div class="row-label">Opponent</div>
             <div class="pits-inner" id="opponent-pits-inner">
-              <!-- Rendered by JS, index 12 down to 7 -->
+              <!-- Rendered by JS -->
             </div>
           </div>
 
@@ -102,12 +102,12 @@
           </div>
         </div>
 
-        <!-- Opponent store (right side) -->
-        <div class="store-col store-col--opponent">
-          <div class="store" id="store-opponent" data-testid="store-opponent">
-            <span class="store-label">Opp Store</span>
-            <span class="store-count" id="store-opponent-count">0</span>
-            <div class="stone-pile" id="store-opponent-pile"></div>
+        <!-- Player store (right side) -->
+        <div class="store-col store-col--player">
+          <div class="store" id="store-player" data-testid="store-player">
+            <span class="store-label">Your Store</span>
+            <span class="store-count" id="store-player-count">0</span>
+            <div class="stone-pile" id="store-player-pile"></div>
           </div>
         </div>
 
