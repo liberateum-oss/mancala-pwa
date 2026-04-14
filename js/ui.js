@@ -47,11 +47,12 @@ function renderPits() {
     playerPitsInner.appendChild(pit);
   }
 
-  // Opponent pits: indices 7–12, rendered left-to-right.
-  // Opponent store is on the LEFT, so their stones travel right → left from our view,
-  // meaning pit 7 is on the left (nearest their store) and pit 12 is on the right.
+  // Opponent pits: rendered right-to-left visually (12 → 7), so that:
+  //   - Pit 12 appears leftmost = opponent's pit 1 (their left = our right-to-left view)
+  //   - Pit 7 appears rightmost = opponent's pit 6 (nearest OPP STORE on the left)
+  // This way opponent pit numbers match what they see from their side of the board.
   opponentPitsInner.innerHTML = '';
-  for (let i = 7; i <= 12; i++) {
+  for (let i = 12; i >= 7; i--) {
     const pit = createPitElement(i, game.board[i], 'opponent');
     opponentPitsInner.appendChild(pit);
   }
@@ -81,8 +82,9 @@ function createPitElement(index, count, side) {
   pit.setAttribute('aria-label', `${side === 'player' ? 'Your' : 'Opponent'} pit ${isPlayer ? index + 1 : 13 - index}: ${count} stone${count !== 1 ? 's' : ''}`);
 
   // Pit number label (1-based, from each side's perspective)
-  // Opponent store is on the LEFT: pit 7 = opp pit 1, pit 12 = opp pit 6
-  const pitNum = isPlayer ? index + 1 : index - 6; // opponent: 7→1, 8→2, ..., 12→6
+  // Opponent store is on the LEFT. Opponent pits are rendered 12→7 left-to-right.
+  // Pit 12 = their pit 1, pit 11 = their pit 2, ..., pit 7 = their pit 6
+  const pitNum = isPlayer ? index + 1 : 13 - index; // opponent: 12→1, 11→2, ..., 7→6
   const label = document.createElement('span');
   label.className = 'pit-number';
   label.textContent = pitNum;
@@ -191,10 +193,10 @@ function renderOpponentMoveButtons() {
   opponentMoveButtons.innerHTML = '';
   if (game.turn !== 'opponent' || game.gameOver) return;
 
-  // Opponent pits: index 7 (their pit 1 from their left) to 12 (their pit 6)
-  // Opponent store is on the LEFT, so their pits 1–6 go left→right (7→12)
-  for (let i = 7; i <= 12; i++) {
-    const opponentPitNumber = i - 6; // 7→1, 8→2, ..., 12→6
+  // Opponent pits rendered as buttons 1–6 from their perspective.
+  // Pit 12 = their pit 1, pit 11 = their pit 2, ..., pit 7 = their pit 6
+  for (let i = 12; i >= 7; i--) {
+    const opponentPitNumber = 13 - i; // 12→1, 11→2, ..., 7→6
     const count = game.board[i];
     const btn = document.createElement('button');
     btn.className = 'opp-move-btn' + (count === 0 ? ' opp-move-btn--empty' : '');
